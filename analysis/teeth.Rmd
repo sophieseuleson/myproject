@@ -1,0 +1,32 @@
+---
+title: "teeth"
+author: "sophieseuleson"
+date: "2020-09-16"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r import-teeth}
+teeth <- read.csv("data/teeth.csv", row.names = 1)
+head(teeth)
+```
+
+```{r boxplots}
+boxplot(len ~ dose, data = teeth)
+boxplot(len ~ supp, data = teeth)
+boxplot(len ~ dose, data = teeth)
+```
+
+```{r permute}
+#observed difference in teeth length due to supplement method
+mean(teeth$len[teeth$supp == "OJ"]) - mean(teeth$len[teeth$supp == "VC"])
+#permute the observations
+supp_perm <- sample(teeth$supp)
+#calculate mean difference in permuted data
+(teeth$len[supp_perm == "OJ"]) - (teeth$len[supp_perm == "VC"])
+```
+
+
