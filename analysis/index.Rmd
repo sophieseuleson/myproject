@@ -13,5 +13,8 @@ Teeth growth analysis is a test from MBL 2020 for workflowr
 
 *[Teeth growth analysis](teeth.html)
 
+
+
 Click Link Below For Freya Zhang's Home Page: 
-*[Freya Zhang's Home Page](https://freyaqz.github.io/myproject/index.html)
+
+[Freya Zhang's Home Page](https://freyaqz.github.io/myproject/index.html)
