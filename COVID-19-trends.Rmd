@@ -1,0 +1,70 @@
+---
+title: "COVID-19-trends"
+author: "p. polytes"
+date: "9/16/2020"
+output: html_document
+---
+```{r example code, echo=FALSE}
+# read data
+rm(list=ls())
+
+library(utils)
+
+#read the Dataset sheet into “R”. The dataset will be called "data".
+data <- read.csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv", 
+                 na.strings = "", fileEncoding = "UTF-8-BOM")
+
+# the code below shows how you may recode the country name's 
+# first letter to a numeric alphabetic position.
+data1 <- data[(data$dateRep=="11/08/2020"), ]  
+CountryAb <- as.integer(as.factor(substr(data1$countriesAndTerritories,1,1)))
+
+# build a linear model for the relationship between 
+# Cumulative_number_for_14_days_of_COVID.19_cases_per_100000 and 
+# the alphabetic position of country name's first letter.
+model1<- lm(Cumulative_number_for_14_days_of_COVID.19_cases_per_100000~CountryAb, 
+            data=data1)
+summary(model1)
+# On 8/11/2020, we did not find a significant relationship 
+# between alphabetic order of country name and COVID-19 cases. 
+# But what if we keep looking at other dates? 
+```
+
+Our goal will be to identify significant relationships between the COVID-19 cases and other variables contained in the ECDC data.
+
+## Load packages
+
+```{r Load packages}
+library(tidyverse)
+library(utils)
+```
+
+
+## Read data into R
+
+```{r read data, echo=FALSE}
+#read the Dataset sheet into “R”. The dataset will be called "data".
+data <- read.csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv",
+na.strings = "", fileEncoding = "UTF-8-BOM")
+head(data)
+```
+
+
+## Explore relationship between number of characters in month name and COVID-19 cases
+
+```{r month name}
+#calculate number of characters in month name
+month_name <- data %>%
+  mutate(month_name = month.name[month]) %>%
+  mutate(month_name_length = nchar(month_name)) %>%
+  filter(month<=7)
+
+#regress number of characters in month name on COVID-19 cases
+model1<- lm(Cumulative_number_for_14_days_of_COVID.19_cases_per_100000~month_name_length, data=month_name)
+summary(model1)
+```
+
+
+## Explanation
+The results above suggest that 1 unit increase in length of month name is associated with 5.2105 decrease in cumulative number of COVID-19 cases per 100000 population in the last 14 days. It is no doubt that there shouldn't be a causal relationship between two variables. We managed to achieve statistically significant p-value after limited sample to data in January to July. As we know, number of COVID-19 cases kept rising in those 7 months. Meanwhile, January and February happen to be the two longest names among the first 7 months. Thus, we leveraged this coincidence to manipulate the data and achieve statistically significant p-value. 
+
